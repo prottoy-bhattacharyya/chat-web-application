@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Input</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff99cc, #66ccff, #99ff99);
+            background-size: 300% 300%;
+            animation: gradientAnimation 5s ease infinite;
+            font-family: sans-serif;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: rgba(16, 114, 106, 0.1);
+            backdrop-filter: blur(30px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+        .container h1 {
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+        }
+        input[type="text"], input[type="password"]{
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        p {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #showPass {
+            user-select: none;
+            border: 2px solid #ddd; 
+            padding: 5px; 
+            border-radius: 8px;
+            margin: 10px;
+            margin-bottom: 31px;
+            cursor: pointer;
+            color: rgb(255, 255, 255);
+            background-color: #058d8d;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #showPass:hover {
+            transform: scale(1.05);
+            background-color: #08b6b6;
+        }
+
+        #showPass:active {
+            transform: scale(0.95);
+        }
+
+        #errorMsg {
+            color: red;
+        }
+
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 30px;
+            }
+
+            input[type="text"], input[type="password"] button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="POST">  
+            <h1> Login </h1>
+            <input type="text" name="username" placeholder="Username" required>
+            <p>
+                <input type="password" id="password" name="password" placeholder="Password" required> 
+                <span id="showPass" onclick="toggle()"> Show Password </span>
+            </p>
+            <p id="errorMsg">{{ error }}</p>
+            <br>
+            <button id="sendButton" href="/chatroom">Send</button>
+        </form>     
+    </div>
+
+    <script>
+        showPass = document.getElementById("password")
+        function toggle() {
+            if (showPass.type === "password") {
+                showPass.type = "text";
+            } else {
+                showPass.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>
+</html>
+
+   
