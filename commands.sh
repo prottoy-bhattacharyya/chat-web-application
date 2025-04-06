@@ -1,7 +1,7 @@
 #create virtual environment
 py -3 -m venv .venv
 
-#activate virtual environment
+#activate virtual environment for windows
 .venv\Scripts\activate
 
 #install dependencies
