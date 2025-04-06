@@ -1,4 +1,6 @@
-create table userLogin(
+create database Chat_web_App;
+use Chat_web_App;
+create table userInfo(
 	username varchar(10) primary key,
   hashed_password varchar(100),
   fullName varchar(50),

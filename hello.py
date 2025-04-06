@@ -1,15 +1,15 @@
 from flask import Flask, render_template, request, redirect
 from datetime import datetime
-import mysql.connector
+# import mysql.connector
 
-sqldb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="1234",
-    database="userlogin"
-)
+# sqldb = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="1234",
+#     database="Chat_web_App"
+# )
 
-cursor = sqldb.cursor()
+# cursor = sqldb.cursor()
 
 
 
@@ -27,22 +27,26 @@ messages = []
 app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
-def index():
+def login():
     if request.method == 'POST':
         global username 
         username = request.form['username']
         global message
         password = request.form['password']
 
-        cursor.execute("SELECT * FROM userLogin WHERE username = %s AND password = %s", (username, password))
-        if(cursor.fetchone()):
-            return redirect('/chatroom')
+        # cursor.execute("SELECT * FROM userInfo WHERE username = %s AND password = %s", (username, password))
+        # name = cursor.fetchone()[1]
+        # if(cursor.fetchone()):
+        #     return redirect('/chatroom',name=name)
+        
         if username == "admin" and password == "admin":
             return redirect('/chatroom')
         else:
             return render_template('login.html',error="Wrong username or password")
     return render_template('login.html')
-
+# @app.route('/signup', methods=['POST','GET'])
+# def signup():
+#     return render_template('signup.html')`
 
 @app.route('/chatroom', methods=['POST', 'GET'])
 def chatroom():
