@@ -2,14 +2,15 @@ from flask import Flask, render_template, request, redirect
 from datetime import datetime
 import mysql.connector
 
-# sqldb = mysql.connector.connect(
-#     host="localhost",
-#     user="your_username",
-#     password="your_password",
-#     database="your_database"
-# )
+sqldb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="1234",
+    database="userlogin"
+)
 
-# cursor = sqldb.cursor()
+cursor = sqldb.cursor()
+
 
 
 # class messageDetails:
@@ -32,6 +33,10 @@ def index():
         username = request.form['username']
         global message
         password = request.form['password']
+
+        cursor.execute("SELECT * FROM userLogin WHERE username = %s AND password = %s", (username, password))
+        if(cursor.fetchone()):
+            return redirect('/chatroom')
         if username == "admin" and password == "admin":
             return redirect('/chatroom')
         else:
