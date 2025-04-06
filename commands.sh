@@ -3,10 +3,11 @@ py -3 -m venv .venv
 
 #activate virtual environment for windows
 .venv\Scripts\activate
+#activate virtual environment for linux
+source .venv/bin/activate
 
 #install dependencies
-pip install Flask
-pip install mysql-connector-python
+pip install --requirement requirements.txt
 
 #run app
 flask --app hello run

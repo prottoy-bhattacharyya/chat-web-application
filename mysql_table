@@ -1,0 +1,6 @@
+create table userLogin(
+	username varchar(10) primary key,
+  hashed_password varchar(100),
+  fullName varchar(50),
+  email varchar(20)
+);
