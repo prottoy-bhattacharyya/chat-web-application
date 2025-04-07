@@ -41,7 +41,7 @@ def login():
             except mysql.connector.Error as error:
                 return render_template('login.html', error = error)
             
-            return render_template('chatroom.html',fullName=fullName)
+            return redirect('/chatroom')
         else:
             return render_template('login.html', error="Wrong username or password")
         
@@ -66,17 +66,15 @@ def signup():
             sqldb.commit()
         except mysql.connector.Error as error:
             return render_template('signup.html', error=error)
-        return render_template('chatroom.html', fullName=fullName)
+        return redirect('/chatroom')
     
     return render_template('signup.html')
 
 @app.route('/chatroom', methods=['POST', 'GET'])
 def chatroom():
-    if request.method == 'POST':
-        message = request.form['message']
-        messages.append(message)
-
-    return render_template('chatroom.html', username=username, messages=messages)
+    cursor.execute('''SELECT fullName FROM userinfo''')
+    names = cursor.fetchall()
+    return render_template('chatroom.html', names=names, messages=messages)
     
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0')
