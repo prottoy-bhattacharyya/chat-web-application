@@ -115,6 +115,19 @@
             color: red;
         }
 
+        .signup-link {
+          text-align: center;
+          margin-top: 15px;
+        }
+
+        .signup-link a {
+          color: #007bff;
+          text-decoration: none;
+        }
+
+        .signup-link a:hover {
+          text-decoration: underline;
+        }
 
         @media (max-width: 600px) {
             .container {
@@ -140,7 +153,10 @@
             <p id="errorMsg">{{ error }}</p>
             <br>
             <button id="sendButton" href="/chatroom">Send</button>
-        </form>     
+        </form> 
+        <div class="signup-link">
+            <a href="/signup">Didn't have an account? Sign Up</a>
+        </div>    
     </div>
 
     <script>

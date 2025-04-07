@@ -14,20 +14,20 @@ db = mysql.connector.connect(
 )
 
 # create user account
-print ("Create user account")
-username = input("Username :")
-password = input("Password :")
-fullName = input("Full Name :")
-email = input("Email :")
+# print ("Create user account")
+# username = input("Username :")
+# password = input("Password :")
+# fullName = input("Full Name :")
+# email = input("Email :")
 
-hashed_password = hashPass(password)
+# hashed_password = hashPass(password)
 
-cursor = db.cursor()
-cursor.execute('''INSERT INTO userinfo
-                VALUES(%s,%s,%s,%s)''',
-                (username,hashed_password,fullName,email))
+# cursor = db.cursor()
+# cursor.execute('''INSERT INTO userinfo
+#                 VALUES(%s,%s,%s,%s)''',
+#                 (username,hashed_password,fullName,email))
 
-db.commit()
+# db.commit()
 
 #find user information
 print("login")
@@ -43,4 +43,4 @@ cursor.execute('''SELECT * FROM userinfo
 # for i in res:
 #     print(i)
 
-print(cursor.fetchall())
+print(str(cursor.fetchone()[2]))
