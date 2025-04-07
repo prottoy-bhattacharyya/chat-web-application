@@ -7,7 +7,7 @@ sqldb = mysql.connector.connect(
     host="localhost",
     user="root",
     # password="1234",
-    database="Chat_web_App"
+    database="chat_web_app"
 )
 cursor = sqldb.cursor()
 
