@@ -118,17 +118,45 @@
         .profile-list li:hover {
             background-color: rgba(97, 117, 207, 0.8);
         }
+
+        .aiChat {
+            list-style: none;
+            padding: 0;
+            
+        }
+
+        .aiChat li {
+            color: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            background-color: linear-gradient(to right, #0b4749, #751111);
+            transition: background-color 0.3s ease;
+        }
+
+        .aiChat li:hover {
+            background-color: rgba(97, 117, 207, 0.8);
+        }
     </style>
 </head>
 <body>
     <div id="sidebar">
+        <ui class="aiChat">
+            <li>
+                <a href="/aiChat">AI Chat</a>
+            </li>
+        </ui>
         <h2>Friends</h2>
         <ul class="profile-list">
             {% for name in names %}
                 <li> {{ name[0] }} </li>
             {% endfor %}
         </ul>
+        
+       
     </div>
+    
     <div id="chat-container">
         <div id="messages"></div>
         <div id="input-container">

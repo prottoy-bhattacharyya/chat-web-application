@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 import hashlib
 from datetime import datetime
 import mysql.connector
+import meta_llama_AI as meta
 
 sqldb = mysql.connector.connect(
     host="localhost",
@@ -75,6 +76,15 @@ def chatroom():
     cursor.execute('''SELECT fullName FROM userinfo''')
     names = cursor.fetchall()
     return render_template('chatroom.html', names=names, messages=messages)
+    
+
+@app.route('/aiChat', methods=['POST','GET'])
+def aiChat():
+    if request.method == 'POST':
+        question = request.form['question']
+        response = meta.metaLlama(question)
+        return render_template('aiChat.html', response=response)
+    return render_template('aiChat.html')
     
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0')
