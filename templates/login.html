@@ -3,174 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colorful Input</title>
+    <title>Login Page</title>
     <style>
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #ff99cc, #66ccff, #99ff99);
-            background-size: 300% 300%;
-            animation: gradientAnimation 5s ease infinite;
-            font-family: sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #333;
         }
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .container {
-            background: rgba(16, 114, 106, 0.1);
-            backdrop-filter: blur(30px);
-            border-radius: 15px;
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 40px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+        }
+
+        .login-container h2 {
             text-align: center;
-            width: 80%;
-            max-width: 400px;
-        }
-        .container h1 {
-            color: white;
             margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            color: #4a148c;
+            font-weight: 600;
         }
-        input[type="text"], input[type="password"]{
-            width: calc(100% - 22px);
-            padding: 10px;
+
+        .form-group {
             margin-bottom: 20px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
+            position: relative; /* Needed for absolute positioning of show password button */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             transition: border-color 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        input[type="text"]:focus, input[type="password"]:focus {
-            border-color: #007bff;
+        .form-group input:focus {
+            border-color: #6a11cb;
             outline: none;
+            box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
         }
 
-        button {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            background-color: #007bff;
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             color: white;
-            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            transition: background 0.3s ease;
         }
 
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+        .login-button:hover {
+            background: linear-gradient(to right, #4a0c8c, #1e56b8);
         }
 
-        button:active {
-            transform: scale(0.95);
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
         }
 
-        p {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+        .signup-link a {
+            text-decoration: none;
+            color: #6a11cb;
+            font-weight: 500;
         }
 
-        #showPass {
-            user-select: none;
-            border: 2px solid #ddd; 
-            padding: 5px; 
-            border-radius: 8px;
-            margin: 10px;
-            margin-bottom: 31px;
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .show-password {
+            color: #2e08089f;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            bottom: 50%;
             cursor: pointer;
-            color: rgb(255, 255, 255);
-            background-color: #058d8d;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        #showPass:hover {
-            transform: scale(1.05);
-            background-color: #08b6b6;
-        }
-
-        #showPass:active {
-            transform: scale(0.95);
+            user-select: none; /* Prevent text selection */
         }
 
         #errorMsg {
             color: red;
+            text-align: center;
         }
-
-        .signup-link {
-          text-align: center;
-          margin-top: 15px;
-        }
-
-        .signup-link a {
-          color: #007bff;
-          text-decoration: none;
-        }
-
-        .signup-link a:hover {
-          text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-                padding: 30px;
-            }
-
-            input[type="text"], input[type="password"] button {
-                font-size: 14px;
-            }
-        }
+        
     </style>
 </head>
 <body>
-    <div class="container">
-        <form method="POST">  
-            <h1> Login </h1>
-            <input type="text" name="username" placeholder="Username" required>
-            <p>
-                <input type="password" id="password" name="password" placeholder="Password" required> 
-                <span id="showPass" onclick="toggle()"> Show Password </span>
-            </p>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>    
+                <span class="show-password" id="showPasswordToggle">Show</span>
+            </div>
+
             <p id="errorMsg">{{ error }}</p>
-            <br>
-            <button id="sendButton" href="/chatroom">Send</button>
-        </form> 
+            <button type="submit" class="login-button">Login</button>
+        </form>
         <div class="signup-link">
-            <a href="/signup">Didn't have an account? Sign Up</a>
-        </div>    
+            <a href="/signup">Create an account</a>
+        </div>
     </div>
 
     <script>
-        showPass = document.getElementById("password")
-        function toggle() {
-            if (showPass.type === "password") {
-                showPass.type = "text";
+        const passwordInput = document.getElementById('password');
+        const showPasswordToggle = document.getElementById('showPasswordToggle');
+
+        showPasswordToggle.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordToggle.textContent = 'Hide'; // Change icon when shown
             } else {
-                showPass.type = "password";
+                passwordInput.type = 'password';
+                showPasswordToggle.textContent = 'Show'; // Change back to original icon
             }
-        }
+        });
     </script>
 </body>
 </html>
-</html>
-
-   

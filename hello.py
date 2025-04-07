@@ -66,7 +66,7 @@ def signup():
             sqldb.commit()
         except mysql.connector.Error as error:
             return render_template('signup.html', error=error)
-        return render_template('chatroom.html', username=username)
+        return render_template('chatroom.html', fullName=fullName)
     
     return render_template('signup.html')
 
