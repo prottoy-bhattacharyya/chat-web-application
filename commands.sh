@@ -6,6 +6,9 @@ py -3 -m venv .venv
 #activate virtual environment for linux
 source .venv/bin/activate
 
+#add requirements to txt file
+pip freeze > requirements.txt
+
 #install dependencies
 pip install --requirement requirements.txt
 
