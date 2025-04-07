@@ -10,7 +10,7 @@ source .venv/bin/activate
 pip install --requirement requirements.txt
 
 #run app
-flask --app hello run
+flask --app main run
 
 #run app with other devices
-flask --app hello run --host=0.0.0.0
+flask --app maiin run --host=0.0.0.0
