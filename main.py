@@ -56,6 +56,15 @@ def signup():
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
+        try:
+            cursor.execute('''SELECT username FROM userinfo
+                           WHERE username = %s'''
+                           ,(username,))
+            if cursor.fetchall:
+                return render_template('signup.html', username_error="Username already exist. Try another")
+        except mysql.error as error:
+            return render_template('signup.html', error=error)
+
         if password != confirm_password:
             return render_template('signup.html', error="Passwords do not match")
         

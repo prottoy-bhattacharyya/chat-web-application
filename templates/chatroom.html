@@ -11,15 +11,15 @@
             height: 100vh;
             margin: 0;
             background: url('https://images.unsplash.com/photo-1557682250-33bec7064ede?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'); /* Replace with your image URL or a solid color */
-            background-size: cover; /* Cover the entire background */
-            background-position: center; /* Center the image */
-            color: #333;
+            background-size: cover; 
+            background-position: center; 
+            color: #ffffff;
         }
 
         #sidebar {
             color: white;
             width: 280px;
-            background-color: rgba(41, 48, 112, 0.9); /* Semi-transparent sidebar */
+            background-color: rgba(41, 48, 112, 0.9);
             border-right: 1px solid #004eb4;
             padding: 20px;
             overflow-y: auto;
@@ -122,38 +122,50 @@
         .aiChat {
             list-style: none;
             padding: 0;
-            
+            text-align: center;
         }
 
         .aiChat li {
-            color: white;
+            color: #d1d8e0;
             padding: 12px 15px;
+            border: 1px solid #485460;
             border-radius: 6px;
             cursor: pointer;
             margin-bottom: 8px;
-            background-color: linear-gradient(to right, #0b4749, #751111);
-            transition: background-color 0.3s ease;
+            background: linear-gradient(to right, #2c3e50, #2b065c); /* Deep blue to teal */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .aiChat li:hover {
-            background-color: rgba(97, 117, 207, 0.8);
+            border-color: #00b894;
+            background: linear-gradient(to right, #34495e, #2ecc71); /* Darker blue to brighter green */
+        }
+
+        
+        .aiChat li:first-child {
+            text-decoration: none; 
+            display: block; 
+        }
+
+        .aiChat li:first-child:hover {
+            text-decoration: none; 
         }
     </style>
 </head>
 <body>
+    <!-- href="/aiChat" -->
     <div id="sidebar">
-        <ui class="aiChat">
-            <li>
-                <a href="/aiChat">AI Chat</a>
-            </li>
-        </ui>
+        
         <h2>Friends</h2>
         <ul class="profile-list">
             {% for name in names %}
                 <li> {{ name[0] }} </li>
             {% endfor %}
         </ul>
-        
+        <hr>
+        <ui class="aiChat">
+            <li onclick="location.href='/aiChat';"> <strong>AI Chat</strong> </li>
+        </ui>
        
     </div>
     
