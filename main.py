@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import hashlib
 from datetime import datetime
 import mysql.connector
@@ -47,6 +47,7 @@ def login():
             return render_template('login.html', error="Wrong username or password")
         
     return render_template('login.html')
+
 @app.route('/signup', methods=['POST','GET'])
 def signup():
     if request.method == 'POST':
@@ -91,8 +92,8 @@ def chatroom():
 def aiChat():
     if request.method == 'POST':
         question = request.form['question']
-        response = meta.metaLlama(question)
-        return render_template('aiChat.html', response=response)
+        response = meta.metaLlama(question + "Please format your response using basic HTML tags. For example, use <p> for paragraphs, <strong> for bold text, <em> for italics, and <ul><li> for lists.")
+        return render_template('aiChat.html',question = question, response=response)
     return render_template('aiChat.html')
     
 if __name__ == '__main__':
