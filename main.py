@@ -3,6 +3,7 @@ import hashlib
 from datetime import datetime
 import mysql.connector
 import meta_llama_AI as meta
+import asyncio
 
 sqldb = mysql.connector.connect(
     host="localhost",
@@ -92,7 +93,7 @@ def chatroom():
 def aiChat():
     if request.method == 'POST':
         question = request.form['question']
-        response = meta.metaLlama(question + "Please format your response using basic HTML tags. For example, use <p> for paragraphs, <strong> for bold text, <em> for italics, and <ul><li> for lists.")
+        response = meta.metaLlama(question + " Please format your response using basic HTML tags. For example, use <p> for paragraphs, <strong> for bold text, <em> for italics, and <ul><li> for lists.")
         return render_template('aiChat.html',question = question, response=response)
     return render_template('aiChat.html')
     
