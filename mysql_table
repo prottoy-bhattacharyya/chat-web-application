@@ -7,6 +7,7 @@ create table userInfo(
   email varchar(20)
 );
 
+new line for test
 create table aiChat(
 	id INT auto_increment primary KEY,
 	user_msg TEXT,
