@@ -36,18 +36,18 @@ def login():
                         (username, hashed_password))
             data = cursor.fetchone()
         except mysql.connector.Error as error:
-            return render_template('login.html', error=error)
+            return render_template('login2.html', error=error)
         if(data):
             try:
                 fullName = str(data[2])
             except mysql.connector.Error as error:
-                return render_template('login.html', error = error)
+                return render_template('login2.html', error = error)
             
             return redirect('/chatroom')
         else:
-            return render_template('login.html', error="Wrong username or password")
+            return render_template('login2.html', error ="Wrong username or password")
         
-    return render_template('login.html')
+    return render_template('login2.html')
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
