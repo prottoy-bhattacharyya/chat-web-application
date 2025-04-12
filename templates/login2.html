@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat aplication</title>
+    <link rel="stylesheet" href= "{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='chat.css')}}">
+</head>
+<body>
+   <div class="container">
+        <form class="form" method="POST">
+            <div class="text"><a href="/"><h1>Login</h1></a></div>
+            <div class="username">
+                <input type="text" name="username" required>
+                <div class="placeholder">Username</div>
+            </div>
+            <div class="pass">
+                <input type="password" id="myInput" name="password" required>
+                <div class="placeholder-pass">Password</div>
+            </div>
+            <div class="error">
+                <p id="errorMsg"><strong>{{ error }}</strong> </p>
+            </div>
+            <div class="foget-show">
+                <label for="show"><input type="checkbox" onclick="myFunction()">Show password</label>
+                <a href="#"></a>
+            </div>
+            
+            <div class="button">
+            <button type="submit" class="btn"><a href="">Log in</a></button>
+            </div>
+            <div class="register">
+                Or, Creat an account
+                <a href="/signup">Register</a>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="{{url_for('static', filename='showpass.js')}}"></script>
+</html>

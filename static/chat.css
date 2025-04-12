@@ -1,0 +1,223 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(bg17.avif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+}
+.container {
+    background-color: rgb(26, 27, 27);  
+    backdrop-filter: blur(20px); 
+    border: 2px solid rgb(19, 27, 27);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 2);   
+    width: 430px;
+    height: 500px; 
+    border-radius: 20px;
+    color: white;  
+    position: relative;
+}
+@property --angle{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+.container::after, .container::before{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 435px;
+    height: 505px;
+    /* background-image: conic-gradient(from var(--angle),transparent 70%,rgb(255, 0, 0)); */
+    /* background-image: conic-gradient(from var(--angle),transparent 50%,rgb(255, 0, 0)); */
+    translate: -50% -50%;
+    z-index: -1;
+    border-radius: 20px;
+    animation: 3s spin linear infinite;
+}
+@keyframes spin{
+    form{
+    --angle: 0deg ;
+    }
+    to{
+   --angle:360deg;
+    }
+}
+.container::before{
+    filter: blur(1.3rem);
+    opacity: 3;
+}
+.form .text a h1{
+    text-align: center;
+    color: white;
+    margin-top: 10px;
+    text-shadow: 2px 2px 4px #000000;
+    /* text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue; */
+}
+.form .text a{
+    text-decoration: none;
+}
+.container .username{
+    width: 100%;
+    height: 40px;
+    margin: 20px 0;
+    margin-top: 50px;
+    position: relative;
+}
+.container .pass{
+    width: 100%;
+    height: 40px;
+    margin: 40px 0;
+    position: relative;
+    display: flex;
+}
+.container .username input{
+    width: 98%;
+    height: 100%;
+    border: 1px solid azure;
+    border-radius: 10px;
+    background: transparent; 
+    outline: none;
+    /* background-color: azure; */
+    /* display: flex; */
+    position: absolute;
+    transition: 0.1s ease; 
+    z-index: 111;  
+    padding-left: 10px;
+}
+.container .pass input{
+    width: 98%;
+    height: 100%;
+    border: 1px solid azure;
+    border-radius: 10px;
+    background: transparent; 
+    outline: none;
+    position: absolute;
+    transition: 0.1s ease; 
+    z-index: 111;  
+    padding-left: 10px;
+
+}
+.container .placeholder{
+    top: 9px;
+    left: 20px;
+    background-color: rgb(26, 27, 27); 
+    position: absolute;
+    transition: 0.2s ease;
+    background: transparent;
+    padding: 0 6px;
+}
+.container .placeholder-pass{
+    top: 9px;
+    left: 20px;
+    background-color: rgb(26, 27, 27); 
+    position: absolute;
+    transition: 0.2s ease;
+    background: transparent;
+    padding: 0 6px;
+    
+}
+.container .username input:active{
+    transform: translateY(4px);
+}
+.container .pass input:active{
+    transform: translateY(4px);
+}
+.container .foget-show{
+    display: flex;
+    justify-content: space-between;
+}
+.foget-show label input{
+    margin-right: 5px;
+    
+}
+
+.form button {
+    border: 1px solid white;
+    display: flex;
+    margin-bottom: 20px ;
+    box-shadow: 0 9px rgb(26, 27, 27);
+    
+}
+.container .form button a{
+    text-decoration: none;
+    color: rgb(247, 243, 243);
+    padding-bottom: 25px ;
+    height: 20px;
+    width: 70px;
+}
+.form .button{
+    position: relative;
+    height: 50px;
+    width: 80px;
+    margin-left: 40%;
+    margin-top: 30px;
+}
+.container .form button:hover{
+   color: rgb(228, 221, 221);
+   transform: scale(1.1);
+   transition: 0.1s ease;
+}
+.container .form button:active{
+   border: 2px solid rgb(245, 244, 244);
+   transform: translateY(4px) scale(0.9);
+   transition: 0.1s ease;
+   box-shadow: 0px 0px 5px white;
+
+}
+.container .username input:focus,
+.container .username input:valid{
+    color: azure;
+    border: 4px solid azure;
+    
+}
+.container .username input:focus + .placeholder,
+.container .username input:valid + .placeholder{
+    transform: translate(-15px,-22px) scale(0.88);
+    z-index: 111;
+    background-color: rgb(26, 27, 27);
+}
+.container .pass input:focus,
+.container .pass input:valid{
+    color: azure;
+    border: 4px solid azure;
+    
+}
+.container .pass input:focus + .placeholder-pass,
+.container .pass input:valid + .placeholder-pass{
+    transform: translate(-15px,-22px) scale(0.88);
+    z-index: 111;
+    background-color: rgb(26, 27, 27);
+}
+.container .form .register{
+    position: absolute;
+    display: flex;
+    margin-left: 20%;
+    margin-top: 40px;
+    
+}
+.container .form .register a{
+    margin: 0 5px;
+    padding: 0 5px;
+    text-decoration: none;
+    color: rgb(235, 135, 21);
+}
+.container .form .register a:active{
+transform: translateY(3px);
+}
+.container .error{
+height: auto;
+width: 100%;
+background-color: red;
+background: transparent;
+}
+.container .error p{
+    color: #f00b0b;
+    text-align: center;
+}
