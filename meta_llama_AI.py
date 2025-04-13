@@ -12,7 +12,8 @@ def metaLlama(ques):
 
   client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    # api_key="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",
+    api_key="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"
   )
 
   completion = client.chat.completions.create(

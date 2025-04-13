@@ -92,8 +92,14 @@ def chatroom():
 @app.route('/aiChat', methods=['POST','GET'])
 def aiChat():
     if request.method == 'POST':
+
         question = request.form['question']
-        response = meta.metaLlama(question + " Please format your response using basic HTML tags. For example, use <p> for paragraphs, <strong> for bold text, <em> for italics, and <ul><li> for lists.")
+        html_text = ''' Please format your response using only HTML tags. 
+                        For example, use <p> for paragraphs, <strong> for bold text, 
+                        <em> for italics, and <ul><li> for lists, 
+                        <br> for line breaks and colorful texts
+                        and never mention about html tags in your answer'''
+        response = meta.metaLlama(question + html_text)
         return render_template('aiChat.html',question = question, response=response)
     return render_template('aiChat.html')
     

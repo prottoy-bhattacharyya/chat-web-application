@@ -1,162 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Room</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #2f85ad;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-         
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-        .chat-container {
-            background-color: #0e276b;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            width: 700px;
-            max-width: 90%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow:hidden;
-        }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f1f5f9;
+    }
 
-        .chat-header {
-            background-color: #0000ff;
-            color: white;
-            padding: 15px;
-            font-weight: 1000;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-        }
+    .chat-container {
+      width: 100%;
+      max-width: 700px;
+      height: 900px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
 
-        .chat-log {
-            
-            padding: 20px;
-            overflow-y: auto;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 700px;
-            
-        }
+    .chat-header {
+      background-color: #e2e8f0;
+      border-bottom: 2px solid #cbd5e1;
+      padding: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
 
-        .message {
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 20px;
-            clear: both;
-            max-width: 80%;
-        }
+    .messages-area {
+      flex-grow: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
 
-        .user-message {
-            margin: 3px;
-            font-size: medium;
-            background-color: #040b3b;
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-left-radius: 5px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-            padding: 8px 12px; 
-            width: fit-content;
-            max-width: 80%;
-        }
+    .message-container {
+      display: flex;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
 
-        .ai-message {
-            color: #fdfdfd;
-            align-self: flex-start;
-            border-radius: 5px;
+    .user-message {
+      justify-content: flex-end;
+    }
 
-        }
+    .ai-message {
+      justify-content: flex-start;
+    }
 
-        .input-area {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #ddd;
-            background-color: #f9f9f9;
-        }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      color: white;
+    }
 
-        .input-area input[type="text"] {
-            flex-grow: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            margin-right: 15px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+    .ai-avatar {
+      background-color: #94a3b8;
+      margin-right: 8px;
+    }
 
-        .input-area input[type="text"]:focus {
-            outline: none;
-            border-color: #6a11cb;
-            box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
-        }
- 
-        .input-area button {
-            padding: 12px 20px;
-            background: linear-gradient(to right, #2575fc, #6a11cb);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
+    .user-avatar {
+      background-color: #3b82f6;
+      margin-left: 8px;
+    }
 
-        .input-area button:hover {
-            background: linear-gradient(to right, #1e56b8, #4a0c8c);
-        }
+    .message-bubble {
+      max-width: 70%;
+      padding: 12px;
+      border-radius: 12px;
+    }
 
-        .chat-log::-webkit-scrollbar {
-            width: 8px;
-        }
+    .ai-bubble {
+      background-color: #e2e8f0;
+      border-top-left-radius: 0;
+    }
 
-        .chat-log::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
+    .user-bubble {
+      background-color: #3b82f6;
+      color: white;
+      border-top-right-radius: 0;
+    }
 
-        .chat-log::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin-top: 24px;
+    }
 
-        .chat-log::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #64748b;
+      border-radius: 50%;
+      margin: 0 4px;
+      animation: pulse 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+    }
+
+    .input-area {
+      padding: 12px;
+      border-top: 2px solid #e2e8f0;
+      background-color: #f1f5f9;
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      margin-right: 8px;
+      outline: none;
+      
+    }
+
+    .chat-input:focus {
+      border-color: #3306ff;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+    .send-button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-button:hover {
+      background-color: #410eaf;
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            AI Chat Room
-        </div>
-        <div class="chat-log" id="chatLog">
-            {% if response %}
-            <div class="user-message">You :  {{ question }}</div>
-            <br>
-            <div class="ai-message">
-                <img src="{{url_for('static', filename='ai.png')}}" style="border-radius: 50%; width:50px">
-                <p> {{ response | safe }} </p>
-            {% endif %}
-            </div>
-        </div>
-        <form class="input-area" method="POST">
-            <input type="text" id="userInput" name="question" placeholder="Type your message...">
-            <button id="sendButton">Send</button>
-        </form>
+  <div class="chat-container">
+    <div class="chat-header">
+      AI CHAT
     </div>
-    <script>
+    
+    <div class="messages-area">
+      <!-- AI Message -->
+      <div class="message-container ai-message">
+        <div class="avatar ai-avatar">AI</div>
+        <div class="message-bubble ai-bubble">
+          Hello! How can I help you today?
+        </div>
+      </div>
+      
+      <!-- User Message -->
+       {% if response %}
+      <div class="message-container user-message">
         
-    </script>
+        <div class="message-bubble user-bubble">
+          You: {{ question }}
+        </div>
+        
+        <div class="avatar user-avatar">U</div>
+      </div>
+        
+      <div class="message-container ai-message">
+        <div class="avatar ai-avatar">AI</div>
+        <div class="message-bubble ai-bubble">
+                {{ response | safe }}   
+        </div>
+      </div>
+      {% endif %}
+      <!-- Typing Indicator -->
+      <div class="message-container ai-message typing-indicator">
+        <div class="avatar ai-avatar" style="display: none;">AI</div>
+        <div>
+          <div style="display: none;" id="loader">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form method="POST">
+        <div class="input-area">
+            <input type="text" name="question" class="chat-input" placeholder="Type a message...">
+            <button class="send-button" type="submit" onclick="loading()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+     </form>
+  </div>
+
+  <script>
+    const loader  = document.getElementById('loader')
+    const ai_avatar = document.getElementById('avatar ai-avatar')
+    function loading(){
+        loader.style.display = "flex";
+        ai_avatar.style.display = "flex";
+    }
+
+    window.onload = function() {
+        loader.style.display = "none";
+        ai_avatar.style.display = "none";
+    }
+  </script>
 </body>
 </html>
