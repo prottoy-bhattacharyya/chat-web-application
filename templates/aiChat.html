@@ -22,7 +22,7 @@
 
     .chat-container {
       width: 100%;
-      max-width: 700px;
+      max-width: 500px;
       height: 900px;
       border: 2px solid #e2e8f0;
       border-radius: 12px;
@@ -173,6 +173,13 @@
     .send-button:hover {
       background-color: #410eaf;
     }
+
+    .error{
+      color: red;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
   </style>
 </head>
 <body>
@@ -208,6 +215,8 @@
         </div>
       </div>
       {% endif %}
+      
+      <div class="error"> {{ error }} </div>
       <!-- Typing Indicator -->
       <div class="message-container ai-message typing-indicator">
         <div class="avatar ai-avatar" style="display: none;">AI</div>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import hashlib
 from datetime import datetime
 import mysql.connector
+from mysql.connector import Error
 import meta_llama_AI as meta
 import asyncio
 
@@ -35,12 +36,12 @@ def login():
                         WHERE username = %s AND hashed_password = %s''', 
                         (username, hashed_password))
             data = cursor.fetchone()
-        except mysql.connector.Error as error:
+        except Error as error:
             return render_template('login2.html', error=error)
         if(data):
             try:
                 fullName = str(data[2])
-            except mysql.connector.Error as error:
+            except Error as error:
                 return render_template('login2.html', error = error)
             
             return redirect('/chatroom')
@@ -76,7 +77,7 @@ def signup():
                         VALUES(%s,%s,%s,%s)''',
                         (username,hashed_password,fullName,email))
             sqldb.commit()
-        except mysql.connector.Error as error:
+        except Error as error:
             return render_template('signup.html', error=error)
         return redirect('/chatroom')
     
@@ -94,12 +95,20 @@ def aiChat():
     if request.method == 'POST':
 
         question = request.form['question']
+        if question == "":
+            redirect('/aiChat')
+        
         html_text = ''' Please format your response using only HTML tags. 
                         For example, use <p> for paragraphs, <strong> for bold text, 
                         <em> for italics, and <ul><li> for lists, 
                         <br> for line breaks and colorful texts
                         and never mention about html tags in your answer'''
-        response = meta.metaLlama(question + html_text)
+        
+        try:
+            response = meta.metaLlama(question + html_text)
+        except Error as error:
+            render_template('aiChat.html', error = error)
+            
         return render_template('aiChat.html',question = question, response=response)
     return render_template('aiChat.html')
     

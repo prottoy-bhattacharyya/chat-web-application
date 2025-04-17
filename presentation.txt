@@ -1,7 +1,7 @@
 Chat Web Application Presentation
 1. Project Overview
 
-Project Title: [Your Project Title - e.g., "ConnectSphere," "ChatVerse," "NexusChat"]
+Project Title: Bartalap
 Brief Description: This project is a real-time chat web application designed to connect users for direct messaging and also provide an intelligent assistant powered by an AI model. It offers a seamless platform for communication with friends and accessing AI-driven information within a single, user-friendly interface.
 Core Functionality: The application will enable users to create accounts, log in securely, connect with other registered users, engage in private one-on-one chats, and pose questions to an integrated AI model for informative responses.
 2. Motivation
@@ -14,24 +14,23 @@ Potential for Expansion: The core functionalities laid out can be expanded upon 
 
 User Authentication:
 Login: Securely log in to existing accounts using username/email and password.
+
 Signup: Create new user accounts with username, email, and password, including password validation.
+converted hashed password is stored in the database to prevent hakers from attacking
 Friend Management:
-User Search: Ability to search for other registered users.
-Friend Request System: Send and accept friend requests to establish connections.
 Friend List: View a list of established friends.
 Real-time Chat with Friends:
 One-on-One Chat: Engage in private, real-time text-based conversations with friends.
 Message History: View past conversations with individual friends.
-(Potential Future Feature): Real-time indicators (e.g., "typing...", "seen").
 AI Chatbot Integration:
 Dedicated AI Chat Interface: A specific section or chat window to interact with the AI model.
 Question Answering: Users can type questions in natural language and receive responses from the AI.
 Formatted Responses: The AI responses will be presented in a readable format (e.g., using HTML).
-Contextual Awareness (Future Implementation): Aim to implement some level of conversational memory for the AI.
+
 User Interface (UI) and User Experience (UX):
 Clean and intuitive design for easy navigation.
 Responsive layout to ensure usability across different devices (desktop, mobile).
-Clear visual distinction between user messages and AI responses.
+
 Data Storage:
 Secure storage of user credentials (hashed passwords).
 Storage of user profiles, friend connections, and chat history.
@@ -42,10 +41,9 @@ Visual Studio Code (VS Code): A lightweight and powerful code editor with excell
 Frontend Development:
 HTML (HyperText Markup Language): For structuring the web pages.
 CSS (Cascading Style Sheets): For styling the visual presentation of the application.
-JavaScript: For adding interactivity and handling real-time features (e.g., using WebSockets for chat, AJAX for AI interaction).
+JavaScript: For adding interactivity and handling real-time features
 Frontend Framework/Library (Potentially):
-React or Vue.js (Consideration for more complex UI): For building a more dynamic and single-page application feel. For a simpler initial project, plain JavaScript might suffice.
-Bootstrap or Tailwind CSS: For pre-built CSS components and responsive design utilities.
+Bootstrap : For pre-built CSS components and responsive design utilities.
 Backend Development:
 Python: A versatile and popular language for web development.
 Flask: A lightweight and flexible micro web framework for Python to handle routing, API endpoints, and server-side logic.
@@ -53,15 +51,10 @@ Database:
 MySQL: A relational database management system for storing user data, friend connections, and chat history.
 AI Integration:
 OpenRouter AI API: A platform that provides access to various large language models (LLMs) through a unified API. We will use this to interact with the AI model for question answering.
-openai Python Library: To interact with the OpenRouter API from our Flask backend.
-Real-time Communication (for Chat with Friends):
-WebSockets: A communication protocol that provides full-duplex communication channels over a single TCP connection, enabling real-time1 exchange of messages between the server and clients. Libraries like Flask-SocketIO (for Flask) can simplify WebSocket implementation.   
+
 1.
-bytewax.io
-bytewax.io
 Other Tools:
 Git: For version control and collaboration.
-Postman or Insomnia: For testing API endpoints.
 Virtual Environment (e.g., venv in Python): To manage project dependencies.
 6. (Optional) Screenshots or Previews (Example - Adapt if you have started):
 
@@ -79,3 +72,4 @@ Screenshot 4: AI Chat Interface: A dedicated section with an input field for ask
 
 Intended UI Style: We aim for a clean and modern user interface, possibly with a light or dark theme option. The chat windows will be designed for readability, with clear distinctions between user and friend/AI messages. We will prioritize intuitive navigation between the different sections of the application (friend list, chat windows, AI chat).
 This presentation provides a solid foundation for explaining your chat web application project. Remember to tailor it with your specific design choices, progress, and any unique aspects of your application. Good luck with your development!
+
