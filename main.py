@@ -8,8 +8,9 @@ import asyncio
 
 sqldb = mysql.connector.connect(
     host="localhost",
+    port="3306",
     user="root",
-    # password="1234",
+    password="1234",
     database="chat_web_app"
 )
 cursor = sqldb.cursor()
@@ -63,9 +64,10 @@ def signup():
             cursor.execute('''SELECT username FROM userinfo
                            WHERE username = %s'''
                            ,(username,))
-            if cursor.fetchall:
+            result = cursor.fetchall() 
+            if result:
                 return render_template('signup.html', username_error="Username already exist. Try another")
-        except mysql.error as error:
+        except Error as error:
             return render_template('signup.html', error=error)
 
         if password != confirm_password:

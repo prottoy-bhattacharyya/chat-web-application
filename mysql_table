@@ -1,5 +1,7 @@
 create database Chat_web_App;
+
 use Chat_web_App;
+
 create table userInfo(
 	username varchar(10) primary key,
   hashed_password varchar(100),
@@ -13,3 +15,4 @@ create table aiChat(
     ai_msg TEXT,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
