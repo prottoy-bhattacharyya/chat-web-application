@@ -10,3 +10,4 @@ password = "MySecretPassword"
 
 hashed_password = hash_password(password)
 print("Hashed password:", hashed_password)
+
