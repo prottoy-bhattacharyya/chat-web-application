@@ -4,7 +4,7 @@ from datetime import datetime
 import mysql.connector
 from mysql.connector import Error
 import meta_llama_AI as meta
-import asyncio
+
 
 sqldb = mysql.connector.connect(
     host="localhost",
