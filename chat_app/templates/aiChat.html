@@ -159,8 +159,8 @@
     }
 
     .send-button {
-      background-color: #3b82f6;
-      color: white;
+      background-color: #3627ff;
+      color: rgb(255, 255, 255);
       border: none;
       border-radius: 8px;
       padding: 10px;
@@ -183,7 +183,7 @@
   </style>
 </head>
 <body>
-  <div class="chat-container">
+  <div class="chat-container" id="chat-container">
     <div class="chat-header">
       AI CHAT
     </div>
@@ -231,7 +231,7 @@
     </div>
     <form method="POST">
         <div class="input-area">
-            <input type="text" name="question" class="chat-input" placeholder="Type a message...">
+            <input type="text" name="question" class="chat-input" id="chat-input" placeholder="Type a message...">
             <button class="send-button" type="submit" onclick="loading()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -245,12 +245,17 @@
   <script>
     const loader  = document.getElementById('loader')
     const ai_avatar = document.getElementById('avatar ai-avatar')
-    function loading(){
+    chat_input = document.getElementById('chat-input').value
+    const chat_container = document.getElementById('chat-container')
+    function loading(){ 
+      // if(chat_input !== ""){
         loader.style.display = "flex";
         ai_avatar.style.display = "flex";
+      // }
     }
 
     window.onload = function() {
+        chat_container.scrollTop = chat_container.scrollHeight;
         loader.style.display = "none";
         ai_avatar.style.display = "none";
     }

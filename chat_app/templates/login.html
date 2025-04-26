@@ -3,144 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #333;
-        }
-
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 350px;
-        }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #4a148c;
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative; /* Needed for absolute positioning of show password button */
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            border-color: #6a11cb;
-            outline: none;
-            box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
-        }
-
-        .login-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-
-        .login-button:hover {
-            background: linear-gradient(to right, #4a0c8c, #1e56b8);
-        }
-
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .signup-link a {
-            text-decoration: none;
-            color: #6a11cb;
-            font-weight: 500;
-        }
-
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-
-        .show-password {
-            color: #2e08089f;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            bottom: 50%;
-            cursor: pointer;
-            user-select: none; /* Prevent text selection */
-        }
-
-        #errorMsg {
-            color: red;
-            text-align: center;
-        }
-        
-    </style>
+    <title>Chat aplication</title>
+    <link rel="stylesheet" href= "{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='chat.css')}}">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+   <div class="container">
+        <form class="form" method="POST">
+            <div class="text"><a href="/"><h1>Login</h1></a></div>
+            <div class="username">
+                <input type="text" name="username" required>
+                <div class="placeholder">Username</div>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>    
-                <span class="show-password" id="showPasswordToggle">Show</span>
+            <div class="pass">
+                <input type="password" id="myInput" name="password" required>
+                <div class="placeholder-pass">Password</div>
             </div>
-
-            <p id="errorMsg"><strong>{{ error }}</strong> </p>
-            <button type="submit" class="login-button">Login</button>
+            <div class="error">
+                <p id="errorMsg"><strong>{{ error }}</strong> </p>
+            </div>
+            <div class="foget-show">
+                <label for="show"><input type="checkbox" onclick="myFunction()">Show password</label>
+                <a href="#"></a>
+            </div>
+            
+            <div class="button">
+            <button type="submit" class="btn"><a href="">Log in</a></button>
+            </div>
+            <div class="register">
+                Or, Creat an account
+                <a href="/signup">Register</a>
+            </div>
         </form>
-        <div class="signup-link">
-            <a href="/signup">Create an account</a>
-        </div>
     </div>
-
-    <script>
-        const passwordInput = document.getElementById('password');
-        const showPasswordToggle = document.getElementById('showPasswordToggle');
-
-        showPasswordToggle.addEventListener('click', function() {
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                showPasswordToggle.textContent = 'Hide'; // Change icon when shown
-            } else {
-                passwordInput.type = 'password';
-                showPasswordToggle.textContent = 'Show'; // Change back to original icon
-            }
-        });
-    </script>
 </body>
+<script src="{{url_for('static', filename='showpass.js')}}"></script>
 </html>

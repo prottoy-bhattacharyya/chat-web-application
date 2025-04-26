@@ -18,7 +18,8 @@ def metaLlama(ques):
     # api_key="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"
     # api_key= "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"
     # api_key= "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"
-    api_key= "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"
+    # api_key= "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"
+    api_key="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"
   )
 
   completion = client.chat.completions.create(
