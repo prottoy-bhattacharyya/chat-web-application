@@ -1,8 +1,8 @@
 read -p "commit msg: " msg
 
 git add .
-echo "added"
+echo "all files added"
 git commit -m "$msg"
-echo "commited: $msg"
+echo "all files commited: $msg"
 git push origin main
-echo "pushed successfully"
+echo "all files pushed successfully"
