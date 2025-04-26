@@ -16,7 +16,7 @@ pip install --requirement requirements.txt
 flask --app main run
 
 #run app with other devices
-flask --app maiin run --host=0.0.0.0
+flask --app main run --host=0.0.0.0
 
 #build mysql docker
 docker build -t chat-app-db .
