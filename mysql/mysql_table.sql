@@ -1,18 +1,26 @@
-create database chat_web_app;
+CREATE DATABASE chat_web_app;
 
-use chat_web_app;
+USE chat_web_app;
 
-create table userinfo(
-	username varchar(10) primary key,
-  hashed_password varchar(100),
-  fullName varchar(50),
-  email varchar(20)
+CREATE TABLE userinfo(
+	username VARCHAR(10) PRIMARY KEY,
+  	hashed_password VARCHAR(100),
+  	fullName TEXT,
+ 	email TEXT
 );
 
-create table aiChat(
-	id INT auto_increment primary KEY,
+CREATE TABLE conversation(
+	user1 VARCHAR(10),
+	user1_msg TEXT,
+	user2 VARCHAR(10),
+	user2_msg TEXT,
+	time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE aiChat(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+  	username VARCHAR(10),
 	user_msg TEXT,
     ai_msg TEXT,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-

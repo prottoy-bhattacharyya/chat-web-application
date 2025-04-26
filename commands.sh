@@ -27,3 +27,13 @@ docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=1234 -p 3333:3306 -d chat-app-
 #run main docker
 docker run -it -p 3333:3306 -p 5000:5000 test_docker
 
+
+#test docker
+docker build -t mysql-app .
+docker build -t flask-app-nginx .
+docker network create app-network 
+docker run --name mysql-app -e MYSQL_ROOT_PASSWORD=1234 -d -p 3333:3306 mysql
+docker run -p 80:80 -p 5000:5000 --network app-network --name flask-app-nginx -d flask-app-nginx
+
+
+
