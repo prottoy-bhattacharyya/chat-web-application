@@ -97,15 +97,9 @@ def aiChat():
     if request.method == 'POST':
 
         question = request.form['question']
-        
-        html_text = ''' Please format your response using only HTML tags. 
-                        For example, use <p> for paragraphs, <strong> for bold text, 
-                        <em> for italics,  
-                        <br> for line breaks and colorful texts
-                        and never mention about html tags in your answer'''
-        
+
         try:
-            response = meta.metaLlama(question + html_text)
+            response = meta.metaLlama(question)
         except Error as error:
             render_template('aiChat.html', error = error)
             

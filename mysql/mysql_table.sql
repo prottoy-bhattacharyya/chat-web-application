@@ -10,10 +10,9 @@ CREATE TABLE userinfo(
 );
 
 CREATE TABLE conversation(
-	user1 VARCHAR(10),
-	user1_msg TEXT,
-	user2 VARCHAR(10),
-	user2_msg TEXT,
+	from_user VARCHAR(10),
+	msg TEXT,
+	to_user VARCHAR(10),
 	time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
