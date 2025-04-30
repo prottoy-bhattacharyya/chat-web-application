@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-import hashlib
-from datetime import datetime
+import hashlib 
+from datetime import datetime 
 import mysql.connector
 from mysql.connector import Error
 import meta_llama_AI as meta
@@ -20,7 +20,6 @@ def hashPass(password):
     hash_obj = hashlib.sha256(bytes)
     hash = hash_obj.hexdigest()
     return hash
-
 
 messages = []
 
@@ -95,9 +94,7 @@ def chatroom():
 @app.route('/aiChat', methods=['POST','GET'])
 def aiChat():
     if request.method == 'POST':
-
         question = request.form['question']
-
         try:
             response = meta.metaLlama(question)
         except Error as error:
@@ -108,4 +105,4 @@ def aiChat():
     
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0')
-        
+    
