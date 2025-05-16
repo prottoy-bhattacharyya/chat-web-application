@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_socketio import join_room, leave_room, send, SocketIO
 import hashlib 
 from datetime import datetime 
 import mysql.connector
 from mysql.connector import Error
 import meta_llama_AI as meta
+
 
 
 sqldb = mysql.connector.connect(
@@ -24,6 +26,8 @@ def hashPass(password):
 messages = []
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "hello_dear"
+Socketio = SocketIO(app)
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
@@ -44,6 +48,8 @@ def login():
             except Error as error:
                 return render_template('login.html', error = error)
             
+            session["username"] = username
+
             return redirect('/chatroom')
         else:
             return render_template('login.html', error ="Wrong username or password")
@@ -80,15 +86,29 @@ def signup():
             sqldb.commit()
         except Error as error:
             return render_template('signup.html', error=error)
+        session["username"] = username
         return redirect('/chatroom')
     
     return render_template('signup.html')
 
 @app.route('/chatroom', methods=['POST', 'GET'])
 def chatroom():
+    if not session.get("username"):
+        return redirect('/')
     cursor.execute('''SELECT fullName FROM userinfo''')
     names = cursor.fetchall()
+    username = session.get("username")
+    print(username + " joined")
+    # join_room(username)
+
     return render_template('chatroom.html', names=names, messages=messages)
+
+# @Socketio.on("message")
+# def message(data):
+#     username = session.get("username")
+#     content = {
+#         "name" : 
+#     }
     
 
 @app.route('/aiChat', methods=['POST','GET'])

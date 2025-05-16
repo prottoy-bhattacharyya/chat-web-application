@@ -20,7 +20,7 @@ def metaLlama(ques):
 
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key= "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"
+        api_key= "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"
     )
 
     completion = client.chat.completions.create(
@@ -33,7 +33,7 @@ def metaLlama(ques):
             }
           ]
     )
-
+    
     response = completion.choices[0].message.content
     cursor.execute('''INSERT INTO aiChat(user_msg, ai_msg)
                   VALUES(%s, %s)''',

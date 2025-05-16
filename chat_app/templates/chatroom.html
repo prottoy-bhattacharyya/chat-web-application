@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+        <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+      crossorigin="anonymous"
+    ></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -178,41 +183,17 @@
     </div>
 
     <script>
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'sent');
-                messageElement.textContent = messageText;
-                messagesDiv.appendChild(messageElement);
-                messageInput.value = '';
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                setTimeout(function() {
-                    receiveMessage("Simulated reply: " + messageText);
-                }, 1000);
-            }
+        var socketio = io();
+        const createMsg = (name, msg) => {
+            const messages = document.getElementById("messages");
+            const content = `<div>
+                <strong> ${name} </strong>  ${msg}
+            </div>`
+            ;
+            messages.innerHTML += content;
         }
 
-        function receiveMessage(text) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'received');
-            messageElement.textContent = text;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
+        
     </script>
 </body>
 </html>
