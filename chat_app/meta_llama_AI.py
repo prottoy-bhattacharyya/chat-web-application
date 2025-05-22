@@ -2,7 +2,7 @@ from openai import OpenAI
 import mysql.connector
 from mysql.connector import Error
 
-def metaLlama(ques):
+def metaLlama(prompt, username):
     sqldb = mysql.connector.connect(
         host="localhost",
         port="3306",
@@ -20,7 +20,7 @@ def metaLlama(ques):
 
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key= "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"
+        api_key= "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"
     )
 
     completion = client.chat.completions.create(
@@ -29,14 +29,14 @@ def metaLlama(ques):
         messages=[
             {
               "role": "user",
-              "content": ques + html_text
+              "content": prompt + html_text
             }
           ]
     )
     
     response = completion.choices[0].message.content
-    cursor.execute('''INSERT INTO aiChat(user_msg, ai_msg)
-                  VALUES(%s, %s)''',
-                  (ques, response))
+    cursor.execute('''INSERT INTO aiChat(username, user_msg, ai_msg)
+                    VALUES(%s, %s, %s)''',
+                  (username, prompt, response))
     sqldb.commit()
     return response

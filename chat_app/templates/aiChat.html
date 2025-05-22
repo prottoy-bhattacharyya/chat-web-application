@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Chat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
   <style>
+    /* Your existing CSS here */
     * {
       margin: 0;
       padding: 0;
@@ -150,7 +154,7 @@
       border-radius: 8px;
       margin-right: 8px;
       outline: none;
-      
+
     }
 
     .chat-input:focus {
@@ -179,7 +183,6 @@
       font-weight: bold;
       font-size: 20px;
     }
-
   </style>
 </head>
 <body>
@@ -187,78 +190,111 @@
     <div class="chat-header">
       AI CHAT
     </div>
-    
-    <div class="messages-area">
-      <!-- AI Message -->
-      <div class="message-container ai-message">
+
+    <div class="messages-area" id="messages-area-content"> <div class="message-container ai-message">
         <div class="avatar ai-avatar">AI</div>
         <div class="message-bubble ai-bubble">
           Hello! How can I help you today?
         </div>
       </div>
-      
-      <!-- User Message -->
-       {% if response %}
-      <div class="message-container user-message">
-        
-        <div class="message-bubble user-bubble">
-          {{ question }}
-        </div>
-        
-        <div class="avatar user-avatar">U</div>
-      </div>
-        
-      <div class="message-container ai-message">
-        <div class="avatar ai-avatar">AI</div>
-        <div class="message-bubble ai-bubble">
-                {{ response | safe }}   
-        </div>
-      </div>
-      {% endif %}
-      
-      <div class="error"> {{ error }} </div>
-      <!-- Typing Indicator -->
-      <div class="message-container ai-message typing-indicator">
-        <div class="avatar ai-avatar" style="display: none;">AI</div>
-        <div>
-          <div style="display: none;" id="loader">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
+
+      <div class="message-container ai-message typing-indicator" id="loading-indicator-container" style="display: none;">
+        <div class="avatar ai-avatar" id="ai-typing-avatar">AI</div> <div id="loader">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
         </div>
       </div>
     </div>
-    <form method="POST">
-        <div class="input-area">
-            <input type="text" name="question" class="chat-input" id="chat-input" placeholder="Type a message...">
-            <button class="send-button" type="submit" onclick="loading()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
-     </form>
+
+    <form id="chat-form">
+      <div class="input-area">
+        <input type="text" name="question" class="chat-input" id="chat-input" placeholder="Type a message...">
+        <button class="send-button" id="send-button" type="submit">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </form>
   </div>
 
   <script>
-    const loader  = document.getElementById('loader')
-    const ai_avatar = document.getElementById('avatar ai-avatar')
-    chat_input = document.getElementById('chat-input').value
-    const chat_container = document.getElementById('chat-container')
-    function loading(){ 
-      // if(chat_input !== ""){
-        loader.style.display = "flex";
-        ai_avatar.style.display = "flex";
-      // }
-    }
+    const ai_socketio = io('/aiChat');
+    // Reference the container for the loader/avatar, not the individual elements directly for showing/hiding
+    //const loading_indicator_container = document.getElementById('loading-indicator-container');
+    const loading_indicator_container = document.getElementById('loader');
+    const ai_typing_avatar = document.getElementById('ai-typing-avatar'); // Get the specific avatar for typing
+    const chat_input_element = document.getElementById('chat-input'); // Renamed for clarity, holds the input ELEMENT
+    const messages_area = document.getElementById('messages-area-content'); // Reference to the actual messages display area
+    const send_button = document.getElementById('send-button');
+    const chat_form = document.getElementById('chat-form'); // Reference the form
 
+    // It's better to listen to the form's submit event for enter key presses
+    chat_form.addEventListener("submit", function(event){
+      event.preventDefault(); // Prevent default form submission (page reload)
+
+      const user_prompt_text = chat_input_element.value.trim(); // Get current value from the element
+
+      console.log("Client: Sending prompt:", user_prompt_text); // Debug: Check what's being sent
+      if(user_prompt_text !== ""){
+        // Display user's message immediately
+        const userMsgHtml = `
+          <div class="message-container user-message">
+            <div class="message-bubble user-bubble">
+              ${user_prompt_text}
+            </div>
+            <div class="avatar user-avatar">U</div>
+          </div>`;
+        messages_area.innerHTML += userMsgHtml;
+
+        // Show loading indicator
+        loading_indicator_container.style.display = "flex";
+        messages_area.scrollTop = messages_area.scrollHeight; // Scroll to show loader
+
+        ai_socketio.emit("ai_from_client", {prompt: user_prompt_text});
+        chat_input_element.value = ""; // Clear input after sending
+      }
+    });
+
+    ai_socketio.on("ai_from_server", function(data){
+      console.log("Client: Received AI response:", data); // Debug: Check what's received
+      loading_indicator_container.style.display = "none"; // Hide loading indicator
+
+      if(data && data.response){
+        const aiMsgHtml = `
+        <div class="message-container ai-message">
+          <div class="avatar ai-avatar">AI</div>
+          <div class="message-bubble ai-bubble">
+            ${data.response}
+          </div>
+        </div>`;
+        messages_area.innerHTML += aiMsgHtml;
+      } else {
+        console.error("Client: Received malformed AI response data:", data); // Debug
+        const errorMsgHtml = `
+        <div class="message-container ai-message">
+          <div class="avatar ai-avatar">AI</div>
+          <div class="message-bubble ai-bubble error">
+            AI Error: No response received or malformed data.
+          </div>
+        </div>`;
+        messages_area.innerHTML += errorMsgHtml;
+      }
+      messages_area.scrollTop = messages_area.scrollHeight; // Scroll to bottom after AI response
+    });
+
+    // Initial state on page load
     window.onload = function() {
-        chat_container.scrollTop = chat_container.scrollHeight;
-        loader.style.display = "none";
-        ai_avatar.style.display = "none";
-    }
+        if (messages_area) {
+            messages_area.scrollTop = messages_area.scrollHeight;
+        }
+        if (loading_indicator_container) {
+            loading_indicator_container.style.display = "none"; // Ensure hidden on load
+        }
+        console.log("Client: AI Chat page loaded, initial UI state set.");
+    };
   </script>
 </body>
 </html>

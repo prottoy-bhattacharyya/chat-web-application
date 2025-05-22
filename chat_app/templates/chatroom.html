@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-        <script
+    <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
       integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -164,7 +163,7 @@
         <h2>Friends</h2>
         <ul class="profile-list">
             {% for name in names %}
-                <li> {{ name[0] }} </li>
+                <li onclick="select_receiver_name({{name[0]}})"> {{ name[0] }} </li>
             {% endfor %}
         </ul>
         <hr>
@@ -184,16 +183,34 @@
 
     <script>
         var socketio = io();
-        const createMsg = (name, msg) => {
-            const messages = document.getElementById("messages");
-            const content = `<div>
-                <strong> ${name} </strong>  ${msg}
-            </div>`
-            ;
-            messages.innerHTML += content;
+        const chat_container = document.getElementById("chat-container");
+        const send_button = document.getElementById("chat-container");
+        const input = document.getElementById("message-input");
+        var receiver_name;
+        function select_receiver_name(name){
+            receiver_name = name;
         }
-
         
+        send_button.addEventListener("click", function(name){
+            event.preventDefault();
+            msg = input.value;
+            
+            if(msg && receiver_name){
+                socketio.emit('from_client', {receiver_name: receiver_name, msg: msg});
+                msg = "";
+            }
+        });
+
+        socketio.on("from_server", function(data){
+            const msg = `
+            <div>
+                ${data.sender} : ${data.msg}
+            </div> `;
+
+            chat_container.innerHTML += msg;
+        });
+
+
     </script>
 </body>
 </html>
