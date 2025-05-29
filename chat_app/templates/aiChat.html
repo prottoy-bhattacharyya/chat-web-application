@@ -26,7 +26,7 @@
 
     .chat-container {
       width: 100%;
-      max-width: 500px;
+      max-width: 90%;
       height: 900px;
       border: 2px solid #e2e8f0;
       border-radius: 12px;
@@ -154,7 +154,6 @@
       border-radius: 8px;
       margin-right: 8px;
       outline: none;
-
     }
 
     .chat-input:focus {
@@ -222,24 +221,21 @@
 
   <script>
     const ai_socketio = io('/aiChat');
-    // Reference the container for the loader/avatar, not the individual elements directly for showing/hiding
     //const loading_indicator_container = document.getElementById('loading-indicator-container');
     const loading_indicator_container = document.getElementById('loader');
-    const ai_typing_avatar = document.getElementById('ai-typing-avatar'); // Get the specific avatar for typing
-    const chat_input_element = document.getElementById('chat-input'); // Renamed for clarity, holds the input ELEMENT
-    const messages_area = document.getElementById('messages-area-content'); // Reference to the actual messages display area
+    const ai_typing_avatar = document.getElementById('ai-typing-avatar');
+    const chat_input_element = document.getElementById('chat-input'); 
+    const messages_area = document.getElementById('messages-area-content');
     const send_button = document.getElementById('send-button');
-    const chat_form = document.getElementById('chat-form'); // Reference the form
+    const chat_form = document.getElementById('chat-form');
 
-    // It's better to listen to the form's submit event for enter key presses
     chat_form.addEventListener("submit", function(event){
-      event.preventDefault(); // Prevent default form submission (page reload)
+      event.preventDefault();
 
-      const user_prompt_text = chat_input_element.value.trim(); // Get current value from the element
+      const user_prompt_text = chat_input_element.value.trim();
 
-      console.log("Client: Sending prompt:", user_prompt_text); // Debug: Check what's being sent
+      console.log("Client: Sending prompt:", user_prompt_text);
       if(user_prompt_text !== ""){
-        // Display user's message immediately
         const userMsgHtml = `
           <div class="message-container user-message">
             <div class="message-bubble user-bubble">
@@ -249,18 +245,17 @@
           </div>`;
         messages_area.innerHTML += userMsgHtml;
 
-        // Show loading indicator
         loading_indicator_container.style.display = "flex";
-        messages_area.scrollTop = messages_area.scrollHeight; // Scroll to show loader
+        messages_area.scrollTop = messages_area.scrollHeight;
 
         ai_socketio.emit("ai_from_client", {prompt: user_prompt_text});
-        chat_input_element.value = ""; // Clear input after sending
+        chat_input_element.value = "";
       }
     });
 
     ai_socketio.on("ai_from_server", function(data){
-      console.log("Client: Received AI response:", data); // Debug: Check what's received
-      loading_indicator_container.style.display = "none"; // Hide loading indicator
+      console.log("Client: Received AI response:", data);
+      loading_indicator_container.style.display = "none";
 
       if(data && data.response){
         const aiMsgHtml = `
@@ -272,7 +267,7 @@
         </div>`;
         messages_area.innerHTML += aiMsgHtml;
       } else {
-        console.error("Client: Received malformed AI response data:", data); // Debug
+        console.error("Client: Received malformed AI response data:", data);
         const errorMsgHtml = `
         <div class="message-container ai-message">
           <div class="avatar ai-avatar">AI</div>
@@ -282,19 +277,11 @@
         </div>`;
         messages_area.innerHTML += errorMsgHtml;
       }
-      messages_area.scrollTop = messages_area.scrollHeight; // Scroll to bottom after AI response
+      messages_area.scrollTop = messages_area.scrollHeight; 
     });
-
-    // Initial state on page load
-    window.onload = function() {
-        if (messages_area) {
-            messages_area.scrollTop = messages_area.scrollHeight;
-        }
-        if (loading_indicator_container) {
-            loading_indicator_container.style.display = "none"; // Ensure hidden on load
-        }
-        console.log("Client: AI Chat page loaded, initial UI state set.");
-    };
   </script>
 </body>
 </html>
+
+
+

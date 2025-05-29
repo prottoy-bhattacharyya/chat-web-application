@@ -20,7 +20,7 @@ def metaLlama(prompt, username):
 
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key= "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"
+        api_key= "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"
     )
 
     completion = client.chat.completions.create(
@@ -33,8 +33,12 @@ def metaLlama(prompt, username):
             }
           ]
     )
+    try:
+      response = completion.choices[0].message.content
+    except openai.AuthenticationError as e:
+      response = "" + str(e)
+      return response
     
-    response = completion.choices[0].message.content
     cursor.execute('''INSERT INTO aiChat(username, user_msg, ai_msg)
                     VALUES(%s, %s, %s)''',
                   (username, prompt, response))
