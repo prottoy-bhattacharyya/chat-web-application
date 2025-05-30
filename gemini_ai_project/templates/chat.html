@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .flash-message {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.375rem;
+        }
+        .flash-message.success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+        .flash-message.danger {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+        .flash-message.info {
+            color: #055160;
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+        .flash-message.warning {
+            color: #664d03;
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+        }
+        /* Custom scrollbar for chat messages */
+        .chat-messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .chat-messages-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .chat-messages-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen bg-gray-100">
+    <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Chat App</h1>
+        <div class="flex items-center space-x-4">
+            <span class="text-lg">Welcome, {{ current_full_name }} ({{ current_username }})!</span>
+            <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-150 ease-in-out">Logout</a>
+        </div>
+    </header>
+
+    <main class="flex flex-1 overflow-hidden">
+        <div class="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto shadow-md">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Friends</h3>
+            <ul id="friends-list" class="space-y-2">
+                {% for user in users %}
+                    <li class="p-3 rounded-md cursor-pointer hover:bg-gray-100 transition duration-150 ease-in-out flex items-center justify-between"
+                        data-user-id="{{ user.id }}" data-username="{{ user.username }}" data-full-name="{{ user.full_name }}">
+                        <span class="font-medium text-gray-700">{{ user.full_name }} ({{ user.username }})</span>
+                        <span id="status-{{ user.id }}" class="text-gray-500 text-sm">Offline</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="flex-1 flex flex-col bg-gray-50">
+            <div id="chat-header" class="bg-gray-200 p-4 border-b border-gray-300 text-center text-xl font-semibold text-gray-800 rounded-tr-lg">
+                Select a friend to start chatting
+            </div>
+
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto chat-messages-container">
+                </div>
+
+            <div id="chat-input-area" class="bg-white p-4 border-t border-gray-200 flex items-center space-x-4 rounded-br-lg hidden">
+                <input type="text" id="message-input" placeholder="Type your message..."
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <button id="send-button"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+                    Send
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const socket = io();
+        const currentUserId = {{ current_user_id }};
+        const currentUsername = "{{ current_username }}";
+
+        let selectedFriendId = null;
+        let selectedFriendUsername = null;
+        let selectedFriendFullName = null;
+
+        const friendsList = document.getElementById('friends-list');
+        const chatHeader = document.getElementById('chat-header');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInputArea = document.getElementById('chat-input-area');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Flash message display
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(msg => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(() => msg.remove(), 500);
+            }, 3000); // Hide after 3 seconds
+        });
+
+        // Event listener for clicking on friends in the sidebar
+        friendsList.addEventListener('click', (event) => {
+            let targetLi = event.target.closest('li');
+            if (targetLi) {
+                // Remove active class from previously selected friend
+                const currentActive = document.querySelector('#friends-list li.bg-blue-100');
+                if (currentActive) {
+                    currentActive.classList.remove('bg-blue-100');
+                    currentActive.classList.add('hover:bg-gray-100');
+                }
+
+                // Add active class to newly selected friend
+                targetLi.classList.add('bg-blue-100');
+                targetLi.classList.remove('hover:bg-gray-100');
+
+                selectedFriendId = targetLi.dataset.userId;
+                selectedFriendUsername = targetLi.dataset.username;
+                selectedFriendFullName = targetLi.dataset.fullName;
+
+                chatHeader.textContent = `Chat with ${selectedFriendFullName} (${selectedFriendUsername})`;
+                chatInputArea.classList.remove('hidden'); // Show input area
+                chatMessages.innerHTML = ''; // Clear previous messages
+                messageInput.focus();
+
+                // Request chat history for the selected friend
+                socket.emit('request_chat_history', { 'other_user_id': selectedFriendId });
+            }
+        });
+
+        // Event listener for send button
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message && selectedFriendId) {
+                socket.emit('send_message', {
+                    'receiver_id': selectedFriendId,
+                    'message': message
+                });
+                messageInput.value = ''; // Clear input field
+            }
+        }
+
+        // Function to display a message in the chat window
+        function displayMessage(senderId, senderUsername, messageText, timestamp) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('mb-2', 'p-3', 'rounded-lg', 'max-w-xs', 'break-words');
+
+            const isCurrentUser = (senderId == currentUserId);
+
+            if (isCurrentUser) {
+                messageDiv.classList.add('bg-blue-500', 'text-white', 'ml-auto');
+            } else {
+                messageDiv.classList.add('bg-gray-300', 'text-gray-800', 'mr-auto');
+            }
+
+            const senderSpan = document.createElement('span');
+            senderSpan.classList.add('font-semibold', 'text-sm');
+            senderSpan.textContent = isCurrentUser ? 'You' : senderUsername;
+            messageDiv.appendChild(senderSpan);
+
+            const messageP = document.createElement('p');
+            messageP.classList.add('text-base', 'mt-1');
+            messageP.textContent = messageText;
+            messageDiv.appendChild(messageP);
+
+            const timestampSpan = document.createElement('span');
+            timestampSpan.classList.add('block', 'text-xs', 'mt-1', isCurrentUser ? 'text-blue-100' : 'text-gray-600');
+            timestampSpan.textContent = timestamp;
+            messageDiv.appendChild(timestampSpan);
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // Socket.IO event handlers
+        socket.on('connect', () => {
+            console.log('Connected to Socket.IO server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from Socket.IO server');
+        });
+
+        socket.on('receive_message', (data) => {
+            // Only display message if it's for the currently selected chat
+            const isMessageForSelectedChat =
+                (data.sender_id == selectedFriendId && data.receiver_id == currentUserId) ||
+                (data.sender_id == currentUserId && data.receiver_id == selectedFriendId);
+
+            if (isMessageForSelectedChat) {
+                displayMessage(data.sender_id, data.sender_username, data.message, data.timestamp);
+            }
+        });
+
+        socket.on('chat_history', (data) => {
+            if (data.other_user_id == selectedFriendId) {
+                chatMessages.innerHTML = ''; // Clear existing messages before loading history
+                data.history.forEach(msg => {
+                    displayMessage(msg.sender_id, msg.sender_username, msg.message_text, msg.timestamp);
+                });
+            }
+        });
+
+        socket.on('user_status', (data) => {
+            const statusElement = document.getElementById(`status-${data.user_id}`);
+            if (statusElement) {
+                statusElement.textContent = data.status === 'online' ? 'Online' : 'Offline';
+                statusElement.classList.remove('text-gray-500', 'text-green-500');
+                statusElement.classList.add(data.status === 'online' ? 'text-green-500' : 'text-gray-500');
+            }
+        });
+
+        // Initial status update for all users on page load
+        // This will be updated by 'user_status' events from the server
+        document.querySelectorAll('#friends-list li').forEach(friendLi => {
+            const userId = friendLi.dataset.userId;
+            const statusElement = document.getElementById(`status-${userId}`);
+            if (statusElement) {
+                statusElement.textContent = 'Offline'; // Default to offline
+                statusElement.classList.remove('text-green-500');
+                statusElement.classList.add('text-gray-500');
+            }
+        });
+
+    </script>
+</body>
+</html>
