@@ -2,14 +2,22 @@ from openai import OpenAI
 import mysql.connector
 from mysql.connector import Error
 
-def metaLlama(prompt, username):
+def metaLlama(prompt, user_id, username):
     sqldb = mysql.connector.connect(
         host="localhost",
         port="3306",
         user="root",
         password="1234",
-        database="chat_web_app"
+        database="test_chat_app"
     )
+    DB_CONFIG = {
+      'host': 'localhost',
+      'user': 'root',
+      'password': '1234',
+      'database': 'test_chat_app'
+    }
+    sqldb = mysql.connector.connect(**DB_CONFIG)
+       
     cursor = sqldb.cursor()
 
     html_text = ''' Please format your response using only HTML tags. 
@@ -20,7 +28,7 @@ def metaLlama(prompt, username):
 
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key= "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"
+        api_key= "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"
     )
 
     completion = client.chat.completions.create(
@@ -39,8 +47,8 @@ def metaLlama(prompt, username):
       response = "" + str(e)
       return response
     
-    cursor.execute('''INSERT INTO aiChat(username, prompt, response)
-                    VALUES(%s, %s, %s)''',
-                  (username, prompt, response))
+    cursor.execute('''INSERT INTO aiChat(user_id, username, prompt, response)
+                    VALUES(%s, %s, %s, %s)''',
+                  (int(user_id), username, prompt, response))
     sqldb.commit()
     return response

@@ -18,8 +18,8 @@ CREATE TABLE conversation(
 
 CREATE TABLE aiChat(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-  	username VARCHAR(10),
-	user_msg TEXT,
-    ai_msg TEXT,
+  	username TEXT,
+	prompt TEXT,
+    response TEXT,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

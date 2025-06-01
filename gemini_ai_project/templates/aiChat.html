@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f1f5f9;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 90%;
+      height: 900px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background-color: #e2e8f0;
+      border-bottom: 2px solid #cbd5e1;
+      padding: 16px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .messages-area {
+      flex-grow: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .message-container {
+      display: flex;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .user-message {
+      justify-content: flex-end;
+    }
+
+    .ai-message {
+      justify-content: flex-start;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      color: white;
+    }
+
+    .ai-avatar {
+      background-color: #94a3b8;
+      margin-right: 8px;
+    }
+
+    .user-avatar {
+      background-color: #3b82f6;
+      margin-left: 8px;
+    }
+
+    .message-bubble {
+      max-width: 70%;
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .ai-bubble {
+      background-color: #e2e8f0;
+      border-top-left-radius: 5px;
+    }
+
+    .user-bubble {
+      background-color: #0f13f8;
+      color: white;
+      border-top-right-radius: 5px;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #372ba5;
+      border-radius: 50%;
+      margin: 0 4px;
+      animation: pulse 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+    }
+
+    .input-area {
+      padding: 12px;
+      border-top: 2px solid #e2e8f0;
+      background-color: #f1f5f9;
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      margin-right: 8px;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: #3306ff;
+      box-shadow: 0 0 0 2px rgba(25, 56, 105, 0.733);
+    }
+
+    .send-button {
+      background-color: #3627ff;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-button:hover {
+      background-color: #410eaf;
+    }
+
+    .error{
+      color: red;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container" id="chat-container">
+    <div class="chat-header">
+      AI CHAT
+    </div>
+
+    <div class="messages-area" id="messages-area-content"> <div class="message-container ai-message">
+        <div class="avatar ai-avatar">AI</div>
+        <div class="message-bubble ai-bubble">
+          Hello! How can I help you today?
+        </div>
+      </div>
+
+      <div class="message-container ai-message typing-indicator" id="loading-indicator-container" style="display: none;">
+        <div class="avatar ai-avatar" id="ai-typing-avatar">AI</div> <div id="loader">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form">
+      <div class="input-area">
+        <input type="text" name="question" class="chat-input" id="chat-input" placeholder="Type a message...">
+        <button class="send-button" id="send-button" type="submit">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const ai_socketio = io('/aiChat');
+    //const loading_indicator_container = document.getElementById('loading-indicator-container');
+    const loading_indicator_container = document.getElementById('loader');
+    const ai_typing_avatar = document.getElementById('ai-typing-avatar');
+    const chat_input_element = document.getElementById('chat-input'); 
+    const messages_area = document.getElementById('messages-area-content');
+    const send_button = document.getElementById('send-button');
+    const chat_form = document.getElementById('chat-form');
+
+    chat_form.addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const user_prompt_text = chat_input_element.value.trim();
+
+      console.log("Client: Sending prompt:", user_prompt_text);
+      if(user_prompt_text !== ""){
+        const userMsgHtml = `
+          <div class="message-container user-message">
+            <div class="message-bubble user-bubble">
+              ${user_prompt_text}
+            </div>
+            <div class="avatar user-avatar">U</div>
+          </div>`;
+        messages_area.innerHTML += userMsgHtml;
+
+        loading_indicator_container.style.display = "flex";
+        messages_area.scrollTop = messages_area.scrollHeight;
+
+        ai_socketio.emit("ai_from_client", {prompt: user_prompt_text});
+        chat_input_element.value = "";
+      }
+    });
+
+    ai_socketio.on("ai_from_server", function(data){
+      console.log("Client: Received AI response:", data);
+      loading_indicator_container.style.display = "none";
+
+      if(data && data.response){
+        const aiMsgHtml = `
+        <div class="message-container ai-message">
+          <div class="avatar ai-avatar">AI</div>
+          <div class="message-bubble ai-bubble">
+            ${data.response}
+          </div>
+        </div>`;
+        messages_area.innerHTML += aiMsgHtml;
+      } else {
+        console.error("Client: Received malformed AI response data:", data);
+        const errorMsgHtml = `
+        <div class="message-container ai-message">
+          <div class="avatar ai-avatar">AI</div>
+          <div class="message-bubble ai-bubble error">
+            AI Error: No response received or malformed data.
+          </div>
+        </div>`;
+        messages_area.innerHTML += errorMsgHtml;
+      }
+      messages_area.scrollTop = messages_area.scrollHeight; 
+    });
+  </script>
+</body>
+</html>
+
+
+
